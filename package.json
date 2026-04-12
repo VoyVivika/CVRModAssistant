@@ -1,0 +1,50 @@
+{
+  "name": "cvr-mod-assistant",
+  "version": "1.0.0",
+  "description": "Mod manager for ChilloutVR",
+  "main": "main.js",
+  "scripts": {
+    "start": "node_modules\\electron\\dist\\electron.exe .",
+    "dev": "node_modules\\electron\\dist\\electron.exe . --inspect",
+    "build": "node node_modules/electron-builder/cli.js --win portable"
+  },
+  "build": {
+    "appId": "com.lenserror.cvr-mod-assistant",
+    "productName": "CVR Mod Assistant",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "node_modules/**/*",
+      "!node_modules/electron-builder/**/*",
+      "!node_modules/.cache/**/*"
+    ],
+    "win": {
+      "icon": "renderer/assets/icons/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "CVRModAssistant.exe"
+    }
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "winreg": "^1.2.4"
+  },
+  "devDependencies": {
+    "electron": "^34.0.0",
+    "electron-builder": "^26.8.1"
+  },
+  "author": "LensError",
+  "license": "MIT"
+}

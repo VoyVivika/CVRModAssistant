@@ -1,0 +1,269 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   LAYOUT — Shell, titlebar, nav rail, topbar, statusbar
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Titlebar ───────────────────────────────────────────────────────────────── */
+#titlebar {
+    position: relative;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+    padding: 0 0 0 12px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    -webkit-app-region: drag;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+#titlebar-drag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    height: 100%;
+}
+
+#titlebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+#titlebar-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-2);
+    letter-spacing: 0.04em;
+}
+
+#titlebar-controls {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    -webkit-app-region: no-drag;
+}
+
+.titlebar-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+}
+.titlebar-btn:hover {
+    background: var(--bg-4);
+    color: var(--text);
+}
+.titlebar-btn-close:hover {
+    background: rgba(255, 61, 90, 0.2);
+    color: var(--red);
+}
+
+/* ── App Shell ─────────────────────────────────────────────────────────────── */
+#app-shell {
+    display: flex;
+    height: calc(100vh - 32px);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Nav Rail ──────────────────────────────────────────────────────────────── */
+#nav-rail {
+    width: 64px;
+    flex-shrink: 0;
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+
+#nav-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+#nav-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 0;
+}
+
+#nav-version {
+    font-size: 8px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 0 4px;
+    word-break: break-all;
+}
+
+/* ── Main Area ─────────────────────────────────────────────────────────────── */
+#main-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    position: relative;
+}
+
+/* ── Topbar ────────────────────────────────────────────────────────────────── */
+#topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 12px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    gap: 10px;
+}
+
+#topbar-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 8px;
+    min-width: 0;
+}
+
+#topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+#search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-5);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 10px;
+    height: 28px;
+    width: 260px;
+    transition: border-color var(--transition-med), box-shadow var(--transition-med);
+}
+#search-wrap:focus-within {
+    border-color: var(--border-2);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+#search-icon { color: var(--text-3); flex-shrink: 0; }
+
+#search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+    padding: 0;
+}
+#search-input::placeholder { color: var(--text-3); }
+
+#selected-count {
+    font-size: 9px;
+    color: var(--text-2);
+}
+
+/* ── Page Content ──────────────────────────────────────────────────────────── */
+#page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    background: var(--bg-base);
+    position: relative;
+}
+
+#mods-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 0;
+}
+
+/* ── Status Bar ────────────────────────────────────────────────────────────── */
+#statusbar {
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    position: relative;
+}
+
+#statusbar-left, #statusbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#status-text {
+    font-size: 11px;
+    color: var(--text-2);
+    transition: color var(--transition);
+}
+#status-text.status-ok  { color: var(--online); }
+#status-text.status-err { color: var(--red); }
+#status-text.status-wrn { color: var(--amber); }
+
+#install-dir-label {
+    font-size: 9px;
+    color: var(--text-3);
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#progress-track {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: transparent;
+}
+#progress-bar {
+    height: 100%;
+    width: 0;
+    background: var(--accent);
+    transition: width 0.3s ease-out;
+    box-shadow: 0 0 6px var(--accent-glow);
+}
+
+/* ── Intro screen (full-height, no rail/topbar) ────────────────────────────── */
+#intro-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-base);
+    z-index: 10;
+    padding: 40px;
+}

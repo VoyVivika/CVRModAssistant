@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; script-src 'self'; connect-src https:;" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CVR Mod Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="icon" href="assets/icons/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/icons/icon_32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="assets/icons/icon_16.png" sizes="16x16" type="image/png">
+    <link rel="apple-touch-icon" href="assets/icons/icon_256.png" sizes="256x256">
+</head>
+<body>
+    <!-- Custom Titlebar -->
+    <div id="titlebar">
+        <div id="titlebar-drag">
+            <div id="titlebar-logo">
+                <img src="assets/icons/icon.svg" width="16" height="16" alt="CVR Mod Assistant Logo">
+                <span id="titlebar-title">CVR Mod Assistant</span>
+            </div>
+        </div>
+        <div id="titlebar-controls">
+            <button id="btn-minimize" class="titlebar-btn" title="Minimize">
+                <svg width="10" height="1" viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg>
+            </button>
+            <button id="btn-maximize" class="titlebar-btn" title="Maximize">
+                <svg width="10" height="10" viewBox="0 0 10 10"><rect x="0.5" y="0.5" width="9" height="9" stroke="currentColor" fill="none"/></svg>
+            </button>
+            <button id="btn-close" class="titlebar-btn titlebar-btn-close" title="Close">
+                <svg width="10" height="10" viewBox="0 0 10 10">
+                    <line x1="0" y1="0" x2="10" y2="10" stroke="currentColor" stroke-width="1.2"/>
+                    <line x1="10" y1="0" x2="0" y2="10" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- App Shell (nav rail + main area) -->
+    <div id="app-shell">
+
+        <!-- Nav Rail (hidden during intro) -->
+        <nav id="nav-rail" style="display:none;">
+            <div id="nav-top">
+                <button class="nav-btn active" id="nav-mods" data-page="mods" title="Mods">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
+                        <path d="M7 8h2m-2 3h2m4-3h2m-2 3h2" stroke-linecap="round"/>
+                    </svg>
+                    <span class="nav-label">Mods</span>
+                </button>
+                <button class="nav-btn" id="nav-options" data-page="options" title="Options">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                        <path d="M12 2v2m0 16v2M2 12h2m16 0h2"/>
+                    </svg>
+                    <span class="nav-label">Options</span>
+                </button>
+                <button class="nav-btn" id="nav-about" data-page="about" title="About">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4m0-4h.01" stroke-linecap="round"/>
+                    </svg>
+                    <span class="nav-label">About</span>
+                </button>
+            </div>
+            <div id="nav-bottom">
+                <div id="nav-version" class="mono">v<span id="app-version-nav">—</span></div>
+            </div>
+        </nav>
+
+        <!-- Main area -->
+        <div id="main-area">
+            <!-- Dynamic topbar (hidden during intro) -->
+            <div id="topbar" style="display:none;">
+                <div id="topbar-left">
+                    <div id="search-wrap">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="search-icon">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="search-input" placeholder="Search mods…" autocomplete="off" spellcheck="false"/>
+                    </div>
+                </div>
+                <div id="topbar-right">
+                    <span id="selected-count" class="mono" style="display:none;"></span>
+                    <button id="btn-refresh" class="btn-ghost" title="Refresh mod list">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                        Refresh
+                    </button>
+                    <button id="btn-install" class="btn-primary" disabled>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Install / Update
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page content -->
+            <div id="page-content">
+                <!-- Pages injected here by JS -->
+            </div>
+
+            <!-- Status bar (hidden during intro) -->
+            <div id="statusbar" style="display:none;">
+                <div id="statusbar-left">
+                    <span id="status-text">Ready.</span>
+                </div>
+                <div id="statusbar-right">
+                    <span id="install-dir-label" class="mono"></span>
+                </div>
+                <div id="progress-track">
+                    <div id="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="pages/intro.js"></script>
+    <script src="pages/mods.js"></script>
+    <script src="pages/options.js"></script>
+    <script src="pages/about.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
