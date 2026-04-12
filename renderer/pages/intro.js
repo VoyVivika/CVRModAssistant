@@ -1,6 +1,3 @@
-// Intro Page Module — startup terms screen
-// Shows once, agreement is saved in settings
-
 window.IntroPage = (() => {
     const TERMS_HTML = `
         <div class="intro-terms-box" id="intro-terms-scroll">
@@ -69,7 +66,6 @@ window.IntroPage = (() => {
             </div>
         `;
 
-        // Wire up checkbox → enable/disable agree button
         const check = document.getElementById('intro-agree-check');
         const agreeBtn = document.getElementById('intro-agree-btn');
         const disagreeBtn = document.getElementById('intro-disagree-btn');
@@ -92,7 +88,6 @@ window.IntroPage = (() => {
         });
 
         disagreeBtn.addEventListener('click', () => {
-            // Confirm exit
             disagreeBtn.textContent = 'Closing…';
             window.cvrma.close();
         });

@@ -211,7 +211,6 @@ async function installMelonLoader(installDir, win) {
         }
     }
 
-    // Create Mods + Plugins dirs
     fs.mkdirSync(path.join(installDir, 'Mods'), { recursive: true });
     fs.mkdirSync(path.join(installDir, 'Plugins'), { recursive: true });
 
@@ -225,18 +224,27 @@ async function installMod(installDir, mod, win) {
 
     win.webContents.send('status-update', { text: `Installing ${name}...`, progress: 0.3 });
 
-    const { buffer, finalUrl } = await downloadToBuffer(downloadLink);
+    const { buffer } = await downloadToBuffer(downloadLink);
 
     const subdir = isPlugin ? 'Plugins' : 'Mods';
     const brokenSub = isBroken ? 'Broken' : (isRetired ? 'Retired' : '');
     const targetDir = path.join(installDir, subdir, brokenSub);
     fs.mkdirSync(targetDir, { recursive: true });
 
-    // Get filename from the final URL's path (after redirects), stripping query params —
-    // mirrors C# resp.RequestMessage.RequestUri.Segments.Last()
-    const urlPath = new URL(finalUrl).pathname;
-    const fileName = urlPath.split('/').filter(Boolean).pop() || `${name}.dll`;
+    // Always use the canonical mod name so filename-based matching works reliably.
+    // Also remove any existing DLL whose normalized basename ends with the normalized
+    // mod name (e.g. "red.sim.LightVolumesUdon.dll" when installing "LightVolumesUdon").
+    const fileName = `${name}.dll`;
     const targetPath = path.join(targetDir, fileName);
+    const normFn = s => s.toLowerCase().replace(/[\s\-_.]/g, '');
+    const nameNorm = normFn(name);
+    try {
+        for (const f of fs.readdirSync(targetDir).filter(f => f.endsWith('.dll'))) {
+            if (f === fileName) continue;
+            if (normFn(f.replace(/\.dll$/i, '')).endsWith(nameNorm))
+                fs.unlinkSync(path.join(targetDir, f));
+        }
+    } catch (e) { /* skip unreadable dirs */ }
 
     fs.writeFileSync(targetPath, buffer);
     win.webContents.send('status-update', { text: `Installed ${name}.`, progress: 1.0 });

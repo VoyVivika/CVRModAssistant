@@ -14,7 +14,6 @@ window.App = (() => {
 
     // ── Startup ───────────────────────────────────────────────────────────────
     async function start() {
-        // Load settings
         appState.settings = await window.cvrma.loadSettings();
         appState.appVersion = await window.cvrma.getAppVersion();
 
@@ -23,14 +22,12 @@ window.App = (() => {
         document.getElementById('btn-maximize').addEventListener('click', () => window.cvrma.maximize());
         document.getElementById('btn-close').addEventListener('click', () => window.cvrma.close());
 
-        // Listen for status pushes from main process (e.g., during download)
         window.cvrma.onStatusUpdate(data => {
             const el = document.getElementById('status-text');
             if (el) el.textContent = data.text;
             if (data.progress !== undefined) setProgress(data.progress);
         });
 
-        // Check terms acceptance
         if (!appState.settings.termsAccepted) {
             showIntro();
         } else {
@@ -45,7 +42,6 @@ window.App = (() => {
     }
 
     async function enterApp() {
-        // Detect install dir
         const detected = await window.cvrma.detectInstallDir();
         if (detected) {
             appState.installDir = detected.dir;
@@ -104,7 +100,6 @@ window.App = (() => {
         const presetBar = document.getElementById('preset-bar');
         if (presetBar) presetBar.style.display = page === 'mods' ? '' : 'none';
 
-        // Clear search on page switch
         const searchInput = document.getElementById('search-input');
         if (searchInput && page !== 'mods') searchInput.value = '';
 
@@ -149,7 +144,6 @@ window.App = (() => {
         bar.style.width = `${Math.round(val * 100)}%`;
     }
 
-    // ── Nav rail wiring ───────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', () => navigateTo(btn.dataset.page));

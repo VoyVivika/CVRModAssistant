@@ -1,4 +1,3 @@
-// About Page Module
 window.AboutPage = (() => {
     const CREDITS = [
         {
@@ -39,7 +38,6 @@ window.AboutPage = (() => {
 
         content.innerHTML = `
             <div class="about-page fade-in">
-                <!-- Hero -->
                 <div class="about-hero">
                     <div class="about-hero-icon">
                         <img src="assets/icons/icon.svg" width="48" height="48" alt="CVR Mod Assistant Logo">
@@ -62,7 +60,6 @@ window.AboutPage = (() => {
                     </div>
                 </div>
 
-                <!-- Description -->
                 <div>
                     <div class="about-section-title">About</div>
                     <div class="about-desc">
@@ -75,7 +72,6 @@ window.AboutPage = (() => {
                     </div>
                 </div>
 
-                <!-- Credits -->
                 <div>
                     <div class="about-section-title">Special Thanks</div>
                     <div class="credits-grid">
@@ -83,7 +79,6 @@ window.AboutPage = (() => {
                     </div>
                 </div>
 
-                <!-- Links -->
                 <div>
                     <div class="about-section-title">Resources</div>
                     <div class="about-links">
@@ -101,7 +96,6 @@ window.AboutPage = (() => {
             </div>
         `;
 
-        // External link handler — use shell open
         content.querySelectorAll('[data-ext]').forEach(el => {
             el.addEventListener('click', e => {
                 e.preventDefault();

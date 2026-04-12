@@ -139,7 +139,7 @@ window.ModsPage = (() => {
         state.activePresetName = name;
         const mods = state.presets[name];
         for (const item of state.modList) {
-            if (item.isUnmanaged) continue;  // never touch unmanaged
+            if (item.isUnmanaged) continue;
             if (item.isBroken || item.isRetired) { item.isSelected = false; continue; }
             item.isSelected = mods.includes(item.name);
         }
@@ -202,7 +202,6 @@ window.ModsPage = (() => {
             </div>
         `;
 
-        // Tab switch
         bar.querySelectorAll('.preset-tab').forEach(tab => {
             tab.addEventListener('click', async () => {
                 const name = tab.dataset.preset;
@@ -514,9 +513,15 @@ window.ModsPage = (() => {
                 </div>` : ''}
             </div>
             <div class="flyout-footer">
+                ${item.isUnmanaged ? `
+                <button id="flyout-delete-unmanaged-btn" class="btn" style="width:100%;margin-bottom:8px;background:var(--danger,#c0392b);color:#fff;border:none;">
+                    Delete File
+                </button>` : ''}
                 <p style="font-size:11px;color:var(--text-3);line-height:1.55;">
-                    Toggle the checkbox on the card, then click
-                    <strong style="color:var(--text)">Sync Mods</strong> to install or remove this mod.
+                    ${item.isUnmanaged
+                        ? 'This file is not in the CVRMG database and cannot be managed here. Delete it if it\'s no longer needed.'
+                        : 'Toggle the checkbox on the card, then click <strong style="color:var(--text)">Sync Mods</strong> to install or remove this mod.'
+                    }
                 </p>
             </div>
         `;
@@ -525,6 +530,21 @@ window.ModsPage = (() => {
         flyout.querySelectorAll('[data-ext]').forEach(el => {
             el.addEventListener('click', e => { e.preventDefault(); window.cvrma.openDir(el.dataset.ext); });
         });
+        const deleteBtn = document.getElementById('flyout-delete-unmanaged-btn');
+        if (deleteBtn && item.isUnmanaged && item.installedFile) {
+            deleteBtn.addEventListener('click', async () => {
+                deleteBtn.disabled = true;
+                deleteBtn.textContent = 'Deleting…';
+                await window.cvrma.uninstallMod(item.installedFile.filePath);
+                closeFlyout();
+                try { state.installedFiles = await window.cvrma.scanInstalledMods(state.installDir); }
+                catch { state.installedFiles = []; }
+                state.modList = buildModList(state.allMods);
+                checkDirty();
+                refreshCardList();
+                updateSyncBtn();
+            });
+        }
         // Attach a one-time click-outside listener on #page-content
         attachClickOutside();
         refreshCardList();
@@ -538,8 +558,6 @@ window.ModsPage = (() => {
         refreshCardList();
     }
 
-    // Click-outside handler — close flyout when clicking on the mod list
-    // (but NOT on the flyout itself or on a mod-card with flyout open).
     let _clickOutsideHandler = null;
     function attachClickOutside() {
         detachClickOutside(); // guard against duplicates
@@ -737,7 +755,6 @@ window.ModsPage = (() => {
             });
         });
 
-        // Wire scroll spy once per scroll area instance
         if (!scrollArea._spyWired) {
             scrollArea._spyWired = true;
             scrollArea.addEventListener('scroll', updateSidebarActive, { passive: true });

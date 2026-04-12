@@ -1,6 +1,4 @@
-// Options Page Module
 window.OptionsPage = (() => {
-
     async function render(installDir, storeType) {
         const content = document.getElementById('page-content');
         content.innerHTML = `
@@ -120,7 +118,6 @@ window.OptionsPage = (() => {
             </div>
         `;
 
-        // Check MelonLoader status
         if (installDir) {
             window.cvrma.melonLoaderStatus(installDir).then(r => {
                 const dot = document.getElementById('ml-dot');
@@ -142,7 +139,6 @@ window.OptionsPage = (() => {
             if (dot && text) { text.textContent = 'Set install directory first.'; }
         }
 
-        // Bind buttons
         document.getElementById('opt-select-dir').addEventListener('click', async () => {
             const result = await window.cvrma.selectDir();
             if (!result) return;
