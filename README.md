@@ -1,13 +1,22 @@
 # CVR Mod Assistant
 
-A mod manager for [ChilloutVR](https://store.steampowered.com/app/661130/ChilloutVR/).
+A modern, fast, and beautiful mod manager for [ChilloutVR](https://store.steampowered.com/app/661130/ChilloutVR/).
+
+![Main Interface](media/mainimage.png)
 
 ## Features
 
-- Browse and install mods from the CVR modding community
-- Automatic MelonLoader detection via Steam registry
-- Enable, disable, and remove installed mods
-- One-click updates for outdated mods
+- **Clean and Intuitive Interface**: Designed for ease of use with a focus on readability and smooth navigation.
+- **Smart Detection**: Automatic MelonLoader and game directory detection via Steam/Oculus registries.
+- **Mod Management**: Browse, install, update, and remove mods from the CVRmg community with ease.
+- **Sync Support**: One-click synchronization to keep your local mods up to date.
+
+## Presets
+
+Manage different mod configurations effortlessly with the new Presets feature. Create, rename, and switch between presets for different playstyles or testing environments.
+
+![Presets Bar](media/presetsbar.png)
+![Adding a Preset](media/addingpreset.png)
 
 ## Installation
 
@@ -24,6 +33,10 @@ npm run build
 
 Output is placed in `dist/`.
 
+## Credits
+
+This project was built upon the foundations of [CVRMelonAssistant](https://github.com/Nirv-git/CVRMelonAssistant). This rewrite would not have been possible without the excellent work done by [Nirv-git](https://github.com/Nirv-git) and the original contributors.
+
 ## License
 
-MIT
+This project is licensed under the [MIT License](LICENSE).
