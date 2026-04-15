@@ -4,7 +4,7 @@ window.SharedData = {
         <div class="intro-terms-box" id="intro-terms-scroll">
             <p>
                 <strong style="color: var(--text)">CVR Mod Assistant</strong> is a community-made mod manager
-                for ChilloutVR. Modding is <strong>officially allowed</strong> per the ChilloutVR Terms of Service, 
+                for ChilloutVR. Modding is <strong>officially allowed</strong> per the <a href="#" onclick="window.cvrma.openExternal('https://docs.chilloutvr.net/official/legal/tos/#6-modding-our-game'); return false;">ChilloutVR Terms of Service</a>,
                 however this tool is NOT affiliated with or endorsed by the ChilloutVR Team.
             </p>
             <p>By using CVR Mod Assistant you agree to the following:</p>
