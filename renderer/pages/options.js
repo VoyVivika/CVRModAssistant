@@ -294,11 +294,69 @@ window.OptionsPage = (() => {
         });
 
         document.getElementById('opt-import-presets').addEventListener('click', async () => {
+            const mode = await window.App.choice({
+                title: 'Import Presets',
+                body: 'Replace all existing presets, or add the imported presets to your current ones?',
+                buttons: [
+                    { label: 'Cancel',  value: null,  style: 'btn-ghost'  },
+                    { label: 'Add',     value: false, style: 'btn-ghost'  },
+                    { label: 'Replace', value: true,  style: 'btn-danger' },
+                ],
+            });
+            if (mode === null) return;
+
             const result = await window.cvrma.importPresets();
             if (result.cancelled) return;
             if (result.error) { setStatus(`Import failed: ${result.error}`, 'err'); return; }
-            const count = Object.keys(result.presets || {}).length;
-            setStatus(`Imported ${count} preset${count !== 1 ? 's' : ''}.`, 'ok');
+
+            const imported = result.presets || {};
+
+            if (mode === true) {
+                // Replace: discard existing, use imported as-is
+                await window.cvrma.saveSettings({ presets: imported });
+                const count = Object.keys(imported).length;
+                setStatus(`Replaced presets — ${count} preset${count !== 1 ? 's' : ''} imported.`, 'ok');
+                return;
+            }
+
+            // Add: merge with conflict resolution
+            const settings = await window.cvrma.loadSettings();
+            const existing = settings.presets || {};
+            const conflicts = Object.keys(imported).filter(k => k in existing);
+            const final = { ...existing };
+            let globalDecision = null; // null=ask, true=overwrite all, false=keep all
+
+            for (let i = 0; i < conflicts.length; i++) {
+                const name = conflicts[i];
+                let overwrite;
+                if (globalDecision !== null) {
+                    overwrite = globalDecision;
+                } else {
+                    const { overwrite: ow, applyToAll } = await window.App.conflict({
+                        name,
+                        existingCount: existing[name].length,
+                        importedCount: imported[name].length,
+                        remaining: conflicts.length - i,
+                    });
+                    overwrite = ow;
+                    if (applyToAll) globalDecision = overwrite;
+                }
+                if (overwrite) final[name] = imported[name];
+            }
+
+            // Add non-conflicting imports
+            for (const [k, v] of Object.entries(imported)) {
+                if (!(k in existing)) final[k] = v;
+            }
+
+            await window.cvrma.saveSettings({ presets: final });
+            const added = Object.keys(imported).filter(k => !(k in existing)).length;
+            const overwritten = conflicts.filter(k => final[k] !== existing[k]).length;
+            const parts = [];
+            if (added) parts.push(`${added} added`);
+            if (overwritten) parts.push(`${overwritten} overwritten`);
+            if (!parts.length) parts.push('no changes');
+            setStatus(`Presets imported — ${parts.join(', ')}.`, 'ok');
         });
 
         const openGameDirBtn = document.getElementById('opt-open-game-dir');

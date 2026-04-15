@@ -528,10 +528,7 @@ ipcMain.handle('import-presets', async () => {
             if (!Array.isArray(v) || v.some(x => typeof x !== 'string'))
                 return { error: `Invalid preset "${k}".` };
         }
-        const settings = loadSettings();
-        const merged = { ...(settings.presets || {}), ...imported };
-        saveSettings({ presets: merged });
-        return { success: true, presets: merged };
+        return { success: true, presets: imported };
     } catch (e) {
         return { error: e.message };
     }

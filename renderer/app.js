@@ -186,6 +186,78 @@ window.App = (() => {
         });
     }
 
+    // ── Multi-choice dialog ───────────────────────────────────────────────────
+    // buttons: [{ label, value, style }] — style is a CSS class ('btn-primary', 'btn-danger', 'btn-ghost')
+    // Returns a Promise that resolves to the chosen value, or null on cancel/dismiss.
+    function showChoice({ title, body, buttons }) {
+        return new Promise(resolve => {
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+            overlay.innerHTML = `
+                <div class="confirm-dialog">
+                    <div class="confirm-title">${escHtml(title)}</div>
+                    ${body ? `<div class="confirm-body">${escHtml(body)}</div>` : ''}
+                    <div class="confirm-actions">
+                        ${buttons.map((b, i) => `<button class="${escHtml(b.style || 'btn-ghost')}" data-idx="${i}">${escHtml(b.label)}</button>`).join('')}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            requestAnimationFrame(() => overlay.querySelector('[data-idx]').focus());
+
+            const done = v => { document.body.removeChild(overlay); resolve(v); };
+            overlay.querySelectorAll('[data-idx]').forEach(btn => {
+                btn.onclick = () => done(buttons[+btn.dataset.idx].value);
+            });
+            overlay.addEventListener('keydown', e => { if (e.key === 'Escape') done(null); });
+            overlay.onclick = e => { if (e.target === overlay) done(null); };
+        });
+    }
+
+    // ── Preset conflict dialog ────────────────────────────────────────────────
+    // Returns Promise<{ overwrite: boolean, applyToAll: boolean }>.
+    // remaining = total number of conflicts still to resolve (including this one).
+    function showConflict({ name, existingCount, importedCount, remaining }) {
+        return new Promise(resolve => {
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-overlay';
+            const checkId = `cd-all-${Date.now()}`;
+            overlay.innerHTML = `
+                <div class="confirm-dialog">
+                    <div class="confirm-title">Preset conflict: ${escHtml(name)}</div>
+                    <div class="confirm-body">
+                        A preset named <strong style="color:var(--text)">${escHtml(name)}</strong> already exists
+                        (${existingCount} mod${existingCount !== 1 ? 's' : ''}).
+                        The imported version has ${importedCount} mod${importedCount !== 1 ? 's' : ''}.
+                    </div>
+                    ${remaining > 1 ? `
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+                        <input type="checkbox" class="custom-checkbox" id="${checkId}" />
+                        <label for="${checkId}" style="font-size:12px;color:var(--text-2);cursor:pointer;user-select:none">
+                            Apply to all ${remaining} remaining conflicts
+                        </label>
+                    </div>` : ''}
+                    <div class="confirm-actions">
+                        <button class="btn-ghost" id="cd-keep">Keep existing</button>
+                        <button class="btn-primary" id="cd-overwrite">Overwrite</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            requestAnimationFrame(() => overlay.querySelector('#cd-keep').focus());
+            const done = (overwrite) => {
+                const allChk = overlay.querySelector(`#${checkId}`);
+                const applyToAll = allChk ? allChk.checked : false;
+                document.body.removeChild(overlay);
+                resolve({ overwrite, applyToAll });
+            };
+            overlay.querySelector('#cd-keep').onclick    = () => done(false);
+            overlay.querySelector('#cd-overwrite').onclick = () => done(true);
+            overlay.addEventListener('keydown', e => { if (e.key === 'Escape') done(false); });
+        });
+    }
+
     function escHtml(s) {
         if (!s) return '';
         return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -196,5 +268,7 @@ window.App = (() => {
         navigateTo,
         setInstallDir,
         confirm: showConfirm,
+        choice: showChoice,
+        conflict: showConflict,
     };
 })();
