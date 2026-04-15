@@ -27,7 +27,7 @@ Presets can also be exported and imported as JSON files from the **Options** pag
 Download the latest version from [Releases](https://github.com/LensError/CVRModAssistant/releases).
 
 *   **Installer (`CVRModAssistant_Setup.exe`)**: Recommended for most users. Includes Desktop/Start Menu shortcuts, faster boot times, and in-app update support.
-*   **Portable (`CVRModAssistant.exe`)**: No installation required. Just run it from wherever you like. Updates must be applied manually — the app will notify you and link to the latest release.
+*   **Portable (`CVRModAssistant.exe`)**: No installation required. Just run it from wherever you like. Updates must be applied manually, the app will notify you and link to the latest release.
 
 ## Building from source
 
