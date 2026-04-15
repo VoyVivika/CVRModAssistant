@@ -85,7 +85,7 @@ window.AboutPage = (() => {
                         <a href="#" class="btn-ghost" data-ext="https://api.cvrmg.com/v1/mods" style="display:inline-flex;align-items:center;gap:6px;padding:0 12px;height:28px;text-decoration:none;">
                             CVRMG Mod API ↗
                         </a>
-                        <a href="#" class="btn-ghost" data-ext="https://discord.gg/cvrmg" style="display:inline-flex;align-items:center;gap:6px;padding:0 12px;height:28px;text-decoration:none;">
+                        <a href="#" class="btn-ghost" data-ext="https://discord.gg/SptDG4EBGb" style="display:inline-flex;align-items:center;gap:6px;padding:0 12px;height:28px;text-decoration:none;">
                             CVRMG Discord ↗
                         </a>
                         <a href="#" class="btn-ghost" data-ext="https://github.com/LavaGang/MelonLoader" style="display:inline-flex;align-items:center;gap:6px;padding:0 12px;height:28px;text-decoration:none;">
