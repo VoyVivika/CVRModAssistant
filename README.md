@@ -35,10 +35,19 @@ Requires [Node.js](https://nodejs.org/).
 
 ```
 npm install
-npm run build
+npm run make
 ```
 
-Output is placed in `dist/`.
+Force make for Windows (requires `wine64` and `mono` to build on Non-Windows Systems)
+```
+npm run make -- --platform win32
+```
+
+Force make for Linux (useful if running ChilloutVR under Proton)
+```
+npm run make -- --platform linux
+```
+Output is placed in `out/`.
 
 ## Credits
 
